@@ -1,6 +1,7 @@
 module GrabBag
   class Config
     def initialize(*args)
+      @mode = :access
       @values = {}
       @params = args.inject({}) do |memo, v|
         if v.is_a?(Hash)
@@ -12,9 +13,19 @@ module GrabBag
       end
     end
 
-    def parse_opts(opts)
-      @values.merge! opts
+    def handle(options = {}, &block)
+      @values.merge! options
+      in_setup_mode do
+        block.call(self) if block
+      end
       self
+    end
+
+    def in_setup_mode
+      @mode = :setup
+      yield
+    ensure
+      @mode = :access
     end
 
     def method_missing(method, *args, &block)
@@ -25,7 +36,11 @@ module GrabBag
         elsif method.to_s =~ /=$/
           @values[key] = args.first
         else
-          @values.has_key?(key) ? @values[key] : @params[key]
+          if @mode == :setup
+            @values[key] = args.first
+          else
+            @values.has_key?(key) ? @values[key] : @params[key]
+          end
         end
       else
         super

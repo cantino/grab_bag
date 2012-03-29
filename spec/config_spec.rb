@@ -2,9 +2,8 @@ require 'spec_helper'
 
 describe GrabBag::Config do
   describe "basic behavior" do
-    def some_method(opts = {})
-      config = GrabBag::Config.new(:success, :tries => 3).parse_opts(opts)
-      yield config if block_given?
+    def some_method(options = {}, &block)
+      config = GrabBag::Config.new(:success, :tries => 3).handle(options, &block)
 
       config.tries.times do
         config.success.call
@@ -47,6 +46,14 @@ describe GrabBag::Config do
       c.false.should == true
       c.false = false
       c.false.should == false
+    end
+
+    it "allows assignment without equals during setup" do
+      c = GrabBag::Config.new(:something)
+      c.handle do |config|
+        config.something 5
+      end
+      c.something.should == 5
     end
   end
 end

@@ -11,7 +11,7 @@ Instead of this:
 Do this:
 
     some_method do |c|
-      c.tries = 2
+      c.tries 2  # or c.tries = 2
 
       c.success do |response|
         complex_success_handling
@@ -32,10 +32,8 @@ Of course, if you like the single-line form, that also works.
 
 Hypothetical implementation:
 
-    def some_method(opts = {})
-      config = GrabBag::Config.new(:success, :error, :timeout_handler, :tries => 5)
-      config.parse_opts(opts)
-      yield config if block_given?
+    def some_method(options = {})
+      config = GrabBag::Config.new(:success, :error, :timeout_handler, :tries => 5).handle(options, &block)
 
       config.tries.times do |t|
         response = try_to_do_something(:timeout => config.timeout_handler)
