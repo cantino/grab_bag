@@ -12,6 +12,11 @@ module GrabBag
       end
     end
 
+    def parse_opts(opts)
+      @values.merge! opts
+      self
+    end
+
     def method_missing(method, *args, &block)
       key = method.to_s.sub(/=$/, '').to_sym
       if @params.has_key?(key)

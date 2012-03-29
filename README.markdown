@@ -22,17 +22,21 @@ Do this:
         complex_error_handling
         ...
       end
-      
+
       c.timeout_handler do
         puts "Oh no, a timeout!"
       end
     end
 
+Of course, if you like the longer form, that also works.
+
 Hypothetical implementation:
 
-    def some_method
+    def some_method(opts = {})
       config = GrabBag::Config.new(:success, :error, :timeout_handler, :tries => 5)
-      yield config
+      config.parse_opts(opts)
+      yield config if block_given?
+
       config.tries.times do |t|
         response = try_to_do_something(:timeout => config.timeout_handler)
         return config.success.call(response) if response

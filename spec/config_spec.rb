@@ -2,11 +2,12 @@ require 'spec_helper'
 
 describe GrabBag::Config do
   describe "basic behavior" do
-    def some_method
-      configuration = GrabBag::Config.new(:success, :tries => 3)
-      yield configuration
-      configuration.tries.times do |t|
-        configuration.success.call(t)
+    def some_method(opts = {})
+      config = GrabBag::Config.new(:success, :tries => 3).parse_opts(opts)
+      yield config if block_given?
+
+      config.tries.times do
+        config.success.call
       end
     end
 
@@ -20,6 +21,12 @@ describe GrabBag::Config do
         c.tries = 5
       end
 
+      counter.should == 5
+    end
+
+    it "works as options" do
+      counter = 0
+      some_method(:tries => 5, :success => lambda { counter += 1 })
       counter.should == 5
     end
 
