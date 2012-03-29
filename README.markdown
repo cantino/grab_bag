@@ -6,7 +6,7 @@
 
 Instead of this:
 
-    some_method :tries => 2, :success => lambda {|response| complex_success_handling ... }, :error => lambda { complex_error_handling ... }
+    some_method :tries => 2, :success => lambda {|response| complex_success_handling ... }, :error => lambda { complex_error_handling ... }, :timeout_handler => lambda { ... }
 
 Do this:
 
@@ -22,15 +22,19 @@ Do this:
         complex_error_handling
         ...
       end
+      
+      c.timeout_handler do
+        puts "Oh no, a timeout!"
+      end
     end
 
 Hypothetical implementation:
 
     def some_method
-      config = GrabBag::Config.new(:success, :error, :tries => 5)
+      config = GrabBag::Config.new(:success, :error, :timeout_handler, :tries => 5)
       yield config
       config.tries.times do |t|
-        response = try_to_do_something
+        response = try_to_do_something(:timeout => config.timeout_handler)
         return config.success.call(response) if response
       end
       config.error.call
