@@ -2,7 +2,7 @@
 
 ## Classes
 
-* `GrabBag::Config` - a method configuration DSL that makes it easy to pass multiple blocks to a method
+* `GrabBag::Config` - a configuration DSL that makes it easy to pass multiple blocks to a method
 
 Instead of this:
 
@@ -24,14 +24,14 @@ Do this:
       end
     end
 
-Hypothetical Usage:
+Hypothetical implementation:
 
     def some_method
-      configuration = GrabBag::Config.new(:success, :error, :tries => 5)
-      yield configuration
-      configuration.tries.times do |t|
+      config = GrabBag::Config.new(:success, :error, :tries => 5)
+      yield config
+      config.tries.times do |t|
         response = try_to_do_something
-        return configuration.success.call(response) if response
+        return config.success.call(response) if response
       end
-      configuration.error.call
+      config.error.call
     end
