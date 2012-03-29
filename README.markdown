@@ -28,7 +28,7 @@ Do this:
       end
     end
 
-Of course, if you like the longer form, that also works.
+Of course, if you like the single-line form, that also works.
 
 Hypothetical implementation:
 
