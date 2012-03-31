@@ -51,10 +51,14 @@ EnumerableExtensions has various mapping helpers.  Honestly, these can all be do
     require 'grab_bag/enumerable_extensions'
 
     [:a, :b, :c, :d].identity_map.should == { :a => :a, :b => :b, :c => :c, :d => :d }
+
     ["a", "abc"].identity_map(:length).should == { 1 => "a", 3 => "abc" }
+
+    [:a, :b, :c, :d, :a, :b].count_map.should == { :a => 2, :b => 2, :c => 1, :d => 1 }
+
     [
-        { :type => :animal, :name => "Moose" },
-        { :type => :plant, :name => "Coconut" },
-        { :type => :animal, :name => "Hippo" }
-    ].count_map([], :type).should == { :animal => 2, :plant => 1 }
+      { :type => :animal, :name => "Moose" },
+      { :type => :plant, :name => "Coconut" },
+      { :type => :animal, :name => "Hippo" }
+    ].count_map(:[], :type).should == { :animal => 2, :plant => 1 }
 

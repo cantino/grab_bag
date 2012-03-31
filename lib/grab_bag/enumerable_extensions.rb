@@ -12,7 +12,7 @@ module Enumerable
     end
   end
 
-  def counts_map(*args)
+  def count_map(*args)
     inject({}) do |m, v|
       r = if args.length > 0
             v.send(*args)

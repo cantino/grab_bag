@@ -4,16 +4,16 @@ require 'grab_bag/enumerable_extensions'
 describe Enumerable do
   describe "counts_map" do
     it "works without an argument" do
-      [1,2,3,1].counts_map.should == { 1 => 2, 2 => 1, 3 => 1 }
+      [1,2,3,1].count_map.should == { 1 => 2, 2 => 1, 3 => 1 }
     end
 
     it "works with an argument" do
-      %w[a aa aaa bbb].counts_map(:length).should == { 1 => 1, 2 => 1, 3 => 2 }
-      [[1,2,3], [3,4,5]].counts_map(:[], 1).should == { 2 => 1, 4 => 1 }
+      %w[a aa aaa bbb].count_map(:length).should == { 1 => 1, 2 => 1, 3 => 2 }
+      [[1,2,3], [3,4,5]].count_map(:[], 1).should == { 2 => 1, 4 => 1 }
     end
 
     it "works with a block" do
-      [5, 3, 1, 2].counts_map {|i| i % 2 == 0 }.should == { true => 1, false => 3 }
+      [5, 3, 1, 2].count_map {|i| i % 2 == 0 }.should == { true => 1, false => 3 }
     end
   end
 
