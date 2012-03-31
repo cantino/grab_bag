@@ -2,7 +2,9 @@
 
 ## Classes
 
-* `GrabBag::Config` - a configuration DSL that makes it easy to pass multiple blocks to a method
+### GrabBag::Config
+
+A configuration DSL that makes it easy to pass multiple blocks to a method.
 
 Instead of this:
 
@@ -41,3 +43,18 @@ Hypothetical implementation:
       end
       config.error.call
     end
+
+### EnumerableExtensions
+
+EnumerableExtensions has various mapping helpers.  Honestly, these can all be done with Rails' `group_by`, but here they are broken out.
+
+    require 'grab_bag/enumerable_extensions'
+
+    [:a, :b, :c, :d].identity_map.should == { :a => :a, :b => :b, :c => :c, :d => :d }
+    ["a", "abc"].identity_map(:length).should == { 1 => "a", 3 => "abc" }
+    [
+        { :type => :animal, :name => "Moose" },
+        { :type => :plant, :name => "Coconut" },
+        { :type => :animal, :name => "Hippo" }
+    ].count_map([], :type).should == { :animal => 2, :plant => 1 }
+
